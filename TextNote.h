@@ -6,7 +6,9 @@
 #define NCNOTE_TEXTNOTE_H
 
 
-class TextNote {
+#include "NoteInterface.h"
+
+class TextNote : NoteInterface {
 
 protected:
     string text;

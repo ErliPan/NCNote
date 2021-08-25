@@ -6,7 +6,9 @@
 #define NCNOTE_NCVIEW_H
 
 
-class NCView {
+#include "ViewInterface.h"
+
+class NCView : public ViewInterface {
 
 };
 
