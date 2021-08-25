@@ -9,4 +9,4 @@ set(gtest_SOURCE ./lib/googletest)
 include_directories(${gtest_SOURCE}/include ${gtest_SOURCE})
 
 add_executable(NCNote_tests runTests.cpp)
-target_link_libraries(NCNote_tests noteLib gtest gtest_main)
+target_link_libraries(NCNote_tests gtest gtest_main NoteInterface.h Collections.h ViewInterface.h NoteInterface.h CollectionInterface.h NCView.h)
