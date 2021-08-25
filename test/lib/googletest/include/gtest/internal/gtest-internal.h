@@ -509,7 +509,7 @@ inline SetUpTearDownSuiteFuncType GetNotDefaultOrNull(
 }
 
 template <typename T>
-//  Note that SuiteApiResolver inherits from T because
+//  TextNote that SuiteApiResolver inherits from T because
 //  SetUpTestSuite()/TearDownTestSuite() could be protected. Ths way
 //  SuiteApiResolver can access them.
 struct SuiteApiResolver : T {

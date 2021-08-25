@@ -83,7 +83,7 @@ namespace testing {
 // Message is not intended to be inherited from.  In particular, its
 // destructor is not virtual.
 //
-// Note that stringstream behaves differently in gcc and in MSVC.  You
+// TextNote that stringstream behaves differently in gcc and in MSVC.  You
 // can stream a NULL char pointer to it in the former, but not in the
 // latter (it causes an access violation if you do).  The Message
 // class hides this difference by treating a NULL char pointer as

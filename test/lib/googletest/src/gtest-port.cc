@@ -916,7 +916,7 @@ bool MatchRegexAtHead(const char* regex, const char* str) {
   if (*regex == '\0')  // An empty regex matches a prefix of anything.
     return true;
 
-  // "$" only matches the end of a string.  Note that regex being
+  // "$" only matches the end of a string.  TextNote that regex being
   // valid guarantees that there's nothing after "$" in it.
   if (*regex == '$')
     return *str == '\0';
@@ -1036,7 +1036,7 @@ GTEST_API_ ::std::string FormatFileLocation(const char* file, int line) {
 // Formats a file location for compiler-independent XML output.
 // Although this function is not platform dependent, we put it next to
 // FormatFileLocation in order to contrast the two functions.
-// Note that FormatCompilerIndependentFileLocation() does NOT append colon
+// TextNote that FormatCompilerIndependentFileLocation() does NOT append colon
 // to the file location it produces, unlike FormatFileLocation().
 GTEST_API_ ::std::string FormatCompilerIndependentFileLocation(
     const char* file, int line) {
@@ -1099,7 +1099,7 @@ class CapturedStream {
     std::string name_template;
 
 #  if GTEST_OS_LINUX_ANDROID
-    // Note: Android applications are expected to call the framework's
+    // TextNote: Android applications are expected to call the framework's
     // Context.getExternalStorageDirectory() method through JNI to get
     // the location of the world-writable SD Card directory. However,
     // this requires a Context handle, which cannot be retrieved
@@ -1404,7 +1404,7 @@ int32_t Int32FromGTestEnv(const char* flag, int32_t default_value) {
 // set, we look for XML_OUTPUT_FILE, which is set by the Bazel build
 // system.  The value of XML_OUTPUT_FILE is a filename without the
 // "xml:" prefix of GTEST_OUTPUT.
-// Note that this is meant to be called at the call site so it does
+// TextNote that this is meant to be called at the call site so it does
 // not check that the flag is 'output'
 // In essence this checks an env variable called XML_OUTPUT_FILE
 // and if it is set we prepend "xml:" to its value, if it not set we return ""

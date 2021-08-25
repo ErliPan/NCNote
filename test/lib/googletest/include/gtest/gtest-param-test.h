@@ -445,7 +445,7 @@ internal::CartesianProductHolder<Generator...> Combine(const Generator&... g) {
 // testing::PrintToStringParamName is a builtin test suffix generator that
 // returns the value of testing::PrintToString(GetParam()).
 //
-// Note: test names must be non-empty, unique, and may only contain ASCII
+// TextNote: test names must be non-empty, unique, and may only contain ASCII
 // alphanumeric characters or underscore. Because PrintToString adds quotes
 // to std::string and C strings, it won't work for these types.
 

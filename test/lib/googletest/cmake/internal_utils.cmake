@@ -1,7 +1,7 @@
 # Defines functions and macros useful for building Google Test and
 # Google Mock.
 #
-# Note:
+# TextNote:
 #
 # - This file will be run twice when building Google Mock (once via
 #   Google Test's CMakeLists.txt, and once via Google Mock's).
@@ -57,7 +57,7 @@ endmacro()
 # Google Mock.  You can tweak these definitions to suit your need.  A
 # variable's value is empty before it's explicitly assigned to.
 macro(config_compiler_and_linker)
-  # Note: pthreads on MinGW is not supported, even if available
+  # TextNote: pthreads on MinGW is not supported, even if available
   # instead, we use windows threading primitives
   unset(GTEST_HAS_PTHREAD)
   if (NOT gtest_disable_pthreads AND NOT MINGW)

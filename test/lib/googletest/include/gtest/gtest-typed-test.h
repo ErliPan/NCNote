@@ -283,7 +283,7 @@ INSTANTIATE_TYPED_TEST_SUITE_P(My, FooTest, MyTypes);
   void GTEST_SUITE_NAMESPACE_(                                        \
       SuiteName)::TestName<gtest_TypeParam_>::TestBody()
 
-// Note: this won't work correctly if the trailing arguments are macros.
+// TextNote: this won't work correctly if the trailing arguments are macros.
 #define REGISTER_TYPED_TEST_SUITE_P(SuiteName, ...)                         \
   namespace GTEST_SUITE_NAMESPACE_(SuiteName) {                             \
     typedef ::testing::internal::Templates<__VA_ARGS__> gtest_AllTests_;    \

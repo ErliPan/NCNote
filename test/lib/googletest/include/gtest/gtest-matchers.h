@@ -869,7 +869,7 @@ PolymorphicMatcher<internal::MatchesRegexMatcher> ContainsRegex(
 }
 
 // Creates a polymorphic matcher that matches anything equal to x.
-// Note: if the parameter of Eq() were declared as const T&, Eq("foo")
+// TextNote: if the parameter of Eq() were declared as const T&, Eq("foo")
 // wouldn't compile.
 template <typename T>
 inline internal::EqMatcher<T> Eq(T x) { return internal::EqMatcher<T>(x); }

@@ -1201,7 +1201,7 @@ class GTEST_API_ TestEventListeners {
 
   // Returns the standard listener responsible for the default console
   // output.  Can be removed from the listeners list to shut down default
-  // console output.  Note that removing this object from the listener list
+  // console output.  TextNote that removing this object from the listener list
   // with Release transfers its ownership to the caller and makes this
   // function return NULL the next time.
   TestEventListener* default_result_printer() const {
@@ -1211,7 +1211,7 @@ class GTEST_API_ TestEventListeners {
   // Returns the standard listener responsible for the default XML output
   // controlled by the --gtest_output=xml flag.  Can be removed from the
   // listeners list by users who want to shut down the default XML output
-  // controlled by this flag and substitute it with custom one.  Note that
+  // controlled by this flag and substitute it with custom one.  TextNote that
   // removing this object from the listener list with Release transfers its
   // ownership to the caller and makes this function return NULL the next
   // time.
@@ -2008,7 +2008,7 @@ class TestWithParam : public Test, public WithParamInterface<T> {
 // or you will get a compiler error.  By "compatible" we mean that the
 // values can be compared by the respective operator.
 //
-// Note:
+// TextNote:
 //
 //   1. It is possible to make a user-defined type work with
 //   {ASSERT|EXPECT}_??(), but that requires overloading the
@@ -2251,7 +2251,7 @@ class GTEST_API_ ScopedTrace {
 
   // The d'tor pops the info pushed by the c'tor.
   //
-  // Note that the d'tor is not virtual in order to be efficient.
+  // TextNote that the d'tor is not virtual in order to be efficient.
   // Don't inherit from ScopedTrace!
   ~ScopedTrace();
 
@@ -2334,7 +2334,7 @@ constexpr bool StaticAssertTypeEq() noexcept {
 //     EXPECT_TRUE(foo.StatusIsOK());
 //   }
 
-// Note that we call GetTestTypeId() instead of GetTypeId<
+// TextNote that we call GetTestTypeId() instead of GetTypeId<
 // ::testing::Test>() here to get the type ID of testing::Test.  This
 // is to work around a suspected linker bug when using Google Test as
 // a framework on Mac OS X.  The bug causes GetTypeId<

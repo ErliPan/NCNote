@@ -644,7 +644,7 @@ bool DeathTestImpl::Passed(bool status_ok) {
 //    any possible error messages) from the pipe, and its stderr and then
 //    determines whether to fail the test.
 //
-// Note: to distinguish Win32 API calls from the local method and function
+// TextNote: to distinguish Win32 API calls from the local method and function
 // calls, the former are explicitly resolved in the global namespace.
 //
 class WindowsDeathTest : public DeathTestImpl {

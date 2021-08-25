@@ -492,7 +492,7 @@ typedef struct _RTL_CRITICAL_SECTION GTEST_CRITICAL_SECTION;
 #  ifdef __GXX_RTTI
 // When building against STLport with the Android NDK and with
 // -frtti -fno-exceptions, the build fails at link time with undefined
-// references to __cxa_bad_typeid. Note sure if STL or toolchain bug,
+// references to __cxa_bad_typeid. TextNote sure if STL or toolchain bug,
 // so disable RTTI when detected.
 #   if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR) && \
        !defined(__EXCEPTIONS)
@@ -1032,7 +1032,7 @@ inline void FlushInfoLog() { fflush(nullptr); }
 //   char&        ==> char&
 //   const char&  ==> const char&
 //
-// Note that the non-const reference will not have "const" added. This is
+// TextNote that the non-const reference will not have "const" added. This is
 // standard, and necessary so that "T" can always bind to "const T&".
 template <typename T>
 struct ConstRef { typedef const T& type; };
@@ -2259,7 +2259,7 @@ const char* StringFromGTestEnv(const char* flag, const char* default_val);
 // a deprecated entity will trigger a warning when compiled with
 // `-Wdeprecated-declarations` option (clang, gcc, any __GNUC__ compiler).
 // For msvc /W3 option will need to be used
-// Note that for 'other' compilers this macro evaluates to nothing to prevent
+// TextNote that for 'other' compilers this macro evaluates to nothing to prevent
 // compilations errors.
 #if defined(_MSC_VER)
 #define GTEST_INTERNAL_DEPRECATED(message) __declspec(deprecated(message))

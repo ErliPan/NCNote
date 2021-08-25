@@ -1047,7 +1047,7 @@ class Timer {
   std::chrono::steady_clock::time_point start_;
 };
 
-// Returns a timestamp as milliseconds since the epoch. Note this time may jump
+// Returns a timestamp as milliseconds since the epoch. TextNote this time may jump
 // around subject to adjustments by the system, to measure elapsed time use
 // Timer instead.
 TimeInMillis GetTimeInMillis() {
@@ -1620,7 +1620,7 @@ AssertionResult FloatingPointLE(const char* expr1,
     return AssertionSuccess();
   }
 
-  // Note that the above two checks will both fail if either val1 or
+  // TextNote that the above two checks will both fail if either val1 or
   // val2 is NaN, as the IEEE floating-point standard requires that
   // any predicate involving a NaN must return false.
 
@@ -2495,7 +2495,7 @@ bool Test::HasSameFixtureClass() {
       // Both TEST and TEST_F appear in same test suite, which is incorrect.
       // Tell the user how to fix this.
 
-      // Gets the name of the TEST and the name of the TEST_F.  Note
+      // Gets the name of the TEST and the name of the TEST_F.  TextNote
       // that first_is_TEST and this_is_TEST cannot both be true, as
       // the fixture IDs are different for the two tests.
       const char* const TEST_name =
@@ -2854,7 +2854,7 @@ void TestInfo::Run() {
 
   // Runs the test if the constructor didn't generate a fatal failure or invoke
   // GTEST_SKIP().
-  // Note that the object will not be null
+  // TextNote that the object will not be null
   if (!Test::HasFatalFailure() && !Test::IsSkipped()) {
     // This doesn't throw as all user code that can throw are wrapped into
     // exception handling code.
@@ -3267,7 +3267,7 @@ bool ShouldUseColor(bool stdout_is_tty) {
   // be conservative.
 }
 
-// Helpers for printing colored strings to stdout. Note that on Windows, we
+// Helpers for printing colored strings to stdout. TextNote that on Windows, we
 // cannot simply emit special characters and have the terminal change colors.
 // This routine must actually emit the characters rather than return a string
 // that would be colored when printed, as can be done on Linux.
@@ -3395,20 +3395,20 @@ void PrettyUnitTestResultPrinter::OnTestIterationStart(
   // Prints the filter if it's not *.  This reminds the user that some
   // tests may be skipped.
   if (!String::CStringEquals(filter, kUniversalFilter)) {
-    ColoredPrintf(GTestColor::kYellow, "Note: %s filter = %s\n", GTEST_NAME_,
+    ColoredPrintf(GTestColor::kYellow, "TextNote: %s filter = %s\n", GTEST_NAME_,
                   filter);
   }
 
   if (internal::ShouldShard(kTestTotalShards, kTestShardIndex, false)) {
     const int32_t shard_index = Int32FromEnvOrDie(kTestShardIndex, -1);
-    ColoredPrintf(GTestColor::kYellow, "Note: This is test shard %d of %s.\n",
+    ColoredPrintf(GTestColor::kYellow, "TextNote: This is test shard %d of %s.\n",
                   static_cast<int>(shard_index) + 1,
                   internal::posix::GetEnv(kTestTotalShards));
   }
 
   if (GTEST_FLAG(shuffle)) {
     ColoredPrintf(GTestColor::kYellow,
-                  "Note: Randomizing tests' orders with a seed of %d .\n",
+                  "TextNote: Randomizing tests' orders with a seed of %d .\n",
                   unit_test.random_seed());
   }
 
@@ -5050,7 +5050,7 @@ TestEventListeners::~TestEventListeners() { delete repeater_; }
 
 // Returns the standard listener responsible for the default console
 // output.  Can be removed from the listeners list to shut down default
-// console output.  Note that removing this object from the listener list
+// console output.  TextNote that removing this object from the listener list
 // with Release transfers its ownership to the user.
 void TestEventListeners::Append(TestEventListener* listener) {
   repeater_->Append(listener);
@@ -6577,7 +6577,7 @@ void ParseGoogleTestFlagsOnlyImpl(int* argc, CharType** argv) {
     }
 
     if (remove_flag) {
-      // Shift the remainder of the argv list left by one.  Note
+      // Shift the remainder of the argv list left by one.  TextNote
       // that argv has (*argc + 1) elements, the last one always being
       // NULL.  The following loop moves the trailing NULL element as
       // well.

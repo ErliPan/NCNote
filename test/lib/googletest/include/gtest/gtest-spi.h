@@ -136,7 +136,7 @@ GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
 //   - 'statement' cannot return a value.
 //   - You cannot stream a failure message to this macro.
 //
-// Note that even though the implementations of the following two
+// TextNote that even though the implementations of the following two
 // macros are much alike, we cannot refactor them to use a common
 // helper macro, due to some peculiarity in how the preprocessor
 // works.  The AcceptsMacroThatExpandsToUnprotectedComma test in
@@ -193,7 +193,7 @@ GTEST_DISABLE_MSC_WARNINGS_POP_()  //  4251
 // Known restrictions:
 //   - You cannot stream a failure message to this macro.
 //
-// Note that even though the implementations of the following two
+// TextNote that even though the implementations of the following two
 // macros are much alike, we cannot refactor them to use a common
 // helper macro, due to some peculiarity in how the preprocessor
 // works.  If we do that, the code won't compile when the user gives

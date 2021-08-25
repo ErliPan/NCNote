@@ -46,7 +46,7 @@
 //      global namespace.
 //
 // However if T is an STL-style container then it is printed element-wise
-// unless foo::PrintTo(const T&, ostream*) is defined. Note that
+// unless foo::PrintTo(const T&, ostream*) is defined. TextNote that
 // operator<<() is ignored for container types.
 //
 // If none of the above is defined, it will print the debug string of
@@ -91,7 +91,7 @@
 // match value_type, and the print output may be incorrect.  In
 // practice, this is rarely a problem as for most containers
 // const_iterator is a forward iterator.  We'll fix this if there's an
-// actual need for it.  Note that this fix cannot rely on value_type
+// actual need for it.  TextNote that this fix cannot rely on value_type
 // being defined as many user-defined container types don't have
 // value_type.
 
@@ -676,7 +676,7 @@ class UniversalPrinter {
   // disable the warning.
   GTEST_DISABLE_MSC_WARNINGS_PUSH_(4180)
 
-  // Note: we deliberately don't call this PrintTo(), as that name
+  // TextNote: we deliberately don't call this PrintTo(), as that name
   // conflicts with ::testing::internal::PrintTo in the body of the
   // function.
   static void Print(const T& value, ::std::ostream* os) {

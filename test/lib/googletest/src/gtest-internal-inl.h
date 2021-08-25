@@ -1142,7 +1142,7 @@ class StreamingListener : public EmptyTestEventListener {
   }
 
   void OnTestProgramEnd(const UnitTest& unit_test) override {
-    // Note that Google Test current only report elapsed time for each
+    // TextNote that Google Test current only report elapsed time for each
     // test iteration, not for the entire test program.
     SendLn("event=TestProgramEnd&passed=" + FormatBool(unit_test.Passed()));
 
@@ -1163,13 +1163,13 @@ class StreamingListener : public EmptyTestEventListener {
            StreamableToString(unit_test.elapsed_time()) + "ms");
   }
 
-  // Note that "event=TestCaseStart" is a wire format and has to remain
+  // TextNote that "event=TestCaseStart" is a wire format and has to remain
   // "case" for compatibility
   void OnTestCaseStart(const TestCase& test_case) override {
     SendLn(std::string("event=TestCaseStart&name=") + test_case.name());
   }
 
-  // Note that "event=TestCaseEnd" is a wire format and has to remain
+  // TextNote that "event=TestCaseEnd" is a wire format and has to remain
   // "case" for compatibility
   void OnTestCaseEnd(const TestCase& test_case) override {
     SendLn("event=TestCaseEnd&passed=" + FormatBool(test_case.Passed()) +

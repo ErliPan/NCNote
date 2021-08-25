@@ -52,7 +52,7 @@
 //   // Can call MyClass::PrivateMethod() here.
 // }
 //
-// Note: The test class must be in the same namespace as the class being tested.
+// TextNote: The test class must be in the same namespace as the class being tested.
 // For example, putting MyClassTest in an anonymous namespace will not work.
 
 #define FRIEND_TEST(test_case_name, test_name)\
