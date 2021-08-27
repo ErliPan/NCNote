@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(NCNote_tests)
+project(QTNote_tests)
 
 set(CMAKE_CXX_STANDARD 14)
 
