@@ -8,20 +8,33 @@
 
 #include "NoteInterface.h"
 
-class TextNote : NoteInterface {
+
+class TextNote : public NoteInterface {
 
 protected:
-    string text;
+    std::string text;
     Collections* observer;
 
 public:
-    const string &getText() const {
+    const std::string &getText() const {
         return text;
     }
 
-    void setText(const string &text) {
+    void setText(const std::string &text) {
         if (!locked)
-            NoteInterface::text = text;
+            this->text = text;
+    }
+
+    void registerObs(Collections *obs) override {
+
+    }
+
+    void removeObs(Collections *obs) override {
+
+    }
+
+    void notify() override {
+
     }
 };
 

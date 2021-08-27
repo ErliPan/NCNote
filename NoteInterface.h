@@ -5,11 +5,11 @@
 #ifndef NCNOTE_NOTEINTERFACE_H
 #define NCNOTE_NOTEINTERFACE_H
 
-
+class Collections; //Fix circular dependency
 class NoteInterface {
 
 protected:
-    string title;
+    std::string title;
 
     bool locked;
     bool important;
@@ -21,11 +21,11 @@ public:
     virtual void removeObs(Collections* obs) = 0;
     virtual void notify() = 0;
 
-    virtual const string &getTitle() const {
+    virtual const std::string &getTitle() const {
         return title;
     }
 
-    virtual void setTitle(const string &title) {
+    virtual void setTitle(const std::string &title) {
         if (!locked)
         NoteInterface::title = title;
     }
@@ -46,11 +46,6 @@ public:
         if (!locked)
         NoteInterface::important = important;
     }
-
-public:
-    virtual void registerObs() = 0;
-    virtual void removeObs() = 0;
-    virtual void notify() const = 0;
 
 };
 
