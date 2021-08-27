@@ -16,14 +16,14 @@
 class Collections : public CollectionInterface {
 
 public:
-    std::list<std::unique_ptr<TextNote>> notes;
+    std::list<TextNote> notes;
     std::map<std::string, int> collection;
 
     void update(std::string fromCollection, std::string toCollection) {
 
     }
 
-    void addNote(TextNote note) {
+    void addNote(TextNote &note) {
 
     }
 
