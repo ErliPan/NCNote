@@ -19,25 +19,28 @@ public:
     std::map<std::string, int> collection;
     std::list<TextNote> notes;
 
-    static const std::string SPECIAL_COLLECTION;
-
-    Collections() {
-        collection.insert(std::pair<std::string, int>(SPECIAL_COLLECTION, 0));
-
-    }
 
     void update(const std::string &fromCollection, const std::string &toCollection) {
 
     }
 
-    void addCollections(const std::string &name) {
+    bool addCollections(const std::string &name) {
+        for (auto it : collection)
+            if (it.first == name) return false;
+
         collection.insert(std::pair<std::string, int>(name, 0));
+        return true;
     }
 
-    TextNote& addNote(const std::string &title, const std::string &collection) {
+    std::unique_ptr<TextNote> addNote(const std::string &title, const std::string &collection) {
+
+        for (auto it : notes) {
+            if (it.getTitle() == title) return std::unique_ptr<TextNote>(&it);
+        }
+
         TextNote elm(title, collection);
         notes.push_back(elm);
-        return notes.back();
+        return std::unique_ptr<TextNote>(&notes.back());
     }
 
     std::map<std::string, int>& getCollections() {
@@ -56,12 +59,12 @@ public:
         return ret;
     }
 
-    TextNote& getNote(const int index) {
-        auto it = notes.begin();
-        if (notes.size() > index)
-            std::advance(it, index);
-        return *it;
+    int getImportantNoteCount() const {
+        return importantNoteCount;
     }
+
+private:
+    int importantNoteCount = 0;
 
 };
 
