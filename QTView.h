@@ -24,125 +24,16 @@ class QTView : public QWidget, public ViewInterface {
 Q_OBJECT
 public:
     QTView(Collections *collections) : collections(collections) {
-
         this->show();
         mainLayout = QPointer<QGridLayout>(new QGridLayout);
         collectionView();
-
     }
 
-    void collectionView() override {
-        clearLayout(mainLayout);
-        int rowCount = 0;
-
-        //Title
-        mainLayout->addWidget(createTitle("Lista collezioni"), rowCount++, 0);
-        mainLayout->addWidget(createText("Seleziona una collezione di note da visualizzare"), rowCount++, 0);
-
-        if (collections->getImportantNoteCount() > 0) {
-            // BTN
-            auto backBtn = createButton("Note importanti: " + collections->getImportantNoteCount());
-            connect(backBtn, SIGNAL(released()), this, SLOT(viewImportantNotes()));
-            mainLayout->addWidget(backBtn, rowCount++, 0);
-        }
-
-        // Selection list
-        selectionList = createListSelection();
-        for (auto it : collections->getCollections()) {
-            new QListWidgetItem(tr(it.first.c_str()), selectionList);
-        }
-        connect(selectionList, SIGNAL(itemSelectionChanged()), this, SLOT(viewNotes()));
-        mainLayout->addWidget(selectionList, rowCount++, 0);
-
-        // BTN
-        auto backBtn = createButton("Aggiungi collezione");
-        connect(backBtn, SIGNAL(released()), this, SLOT(addCollection()));
-        mainLayout->addWidget(backBtn, rowCount++, 0);
-
-        setLayout(mainLayout);
-        setWindowTitle(tr("QTNote: Collezioni"));
-    }
-
-    void noteView() override {
-        clearLayout(mainLayout);
-        int rowCount = 0;
-
-        //Title
-        mainLayout->addWidget(createTitle("Lista note"), rowCount++, 0);
-        mainLayout->addWidget(createText("Seleziona una nota per modificare"), rowCount++, 0);
-
-        // Selection list
-        selectionList = createListSelection();
-        auto notes = collections->getNotes(currentCollection);
-
-        if (notes->size() > 0) {
-            for (auto it: *notes)
-                new QListWidgetItem(tr(it.getTitle().c_str()), selectionList);
-        } else {
-            mainLayout->addWidget(createText("Nessuna nota. Creane una"), rowCount++, 0);
-        }
-
-        connect(selectionList, SIGNAL(itemSelectionChanged()), this, SLOT(noteSelected()));
-        mainLayout->addWidget(selectionList, rowCount++, 0);
-
-        // BTN
-        auto newNoteBtn = createButton("Crea nota");
-        connect(newNoteBtn, SIGNAL(released()), this, SLOT(createNote()));
-        mainLayout->addWidget(newNoteBtn, rowCount++, 0);
-
-        // BTN
-        auto backBtn = createButton("Torna indietro");
-        connect(backBtn, SIGNAL(released()), this, SLOT(goBackToCollection()));
-        mainLayout->addWidget(backBtn, rowCount++, 0);
-
-        setLayout(mainLayout);
-        std::string title = "QTNote: " + currentCollection;
-        setWindowTitle(tr(title.c_str()));
-    }
-
-    void editNote(TextNote &note) override {
-        clearLayout(mainLayout);
-        int rowCount = 0;
-
-        //Title
-        mainLayout->addWidget(createTitle(note.getTitle()), rowCount++, 0);
-
-        //CHeckbox
-        auto lockCheck = createCheckBox("Bloccato");
-        lockCheck->setChecked(getCurrentNote(currentTitle).isLocked());
-        mainLayout->addWidget(lockCheck, rowCount++, 0);
-        connect(lockCheck, SIGNAL(stateChanged(int)), this, SLOT(lockStateChange(int)));
-
-        //CHeckbox
-        auto importantCheck = createCheckBox("Importante", getCurrentNote(currentTitle).isLocked());
-        importantCheck->setChecked(getCurrentNote(currentTitle).isImportant());
-        mainLayout->addWidget(importantCheck, rowCount++, 0);
-        connect(importantCheck, SIGNAL(stateChanged(int)), this, SLOT(importantStateChange(int)));
-
-        //Text Area
-        textArea = createTextArea(getCurrentNote(currentTitle).getText(), getCurrentNote(currentTitle).isLocked());
-        mainLayout->addWidget(textArea, rowCount++, 0);
-
-        // BTN
-        auto saveBtn = createButton(getCurrentNote(currentTitle).isLocked() ? "Torna indietro" : "Salva");
-        connect(saveBtn, SIGNAL(released()), this, SLOT(saveCurrentNote()));
-        mainLayout->addWidget(saveBtn, rowCount++, 0);
-
-        // BTN
-        auto changeCollectionBtn = createButton("Cambia collezione", getCurrentNote(currentTitle).isLocked());
-        connect(changeCollectionBtn, SIGNAL(released()), this, SLOT(changeCollection()));
-        mainLayout->addWidget(changeCollectionBtn, rowCount++, 0);
-
-        // BTN
-        auto deleteBtn = createButton("Elimina", getCurrentNote(currentTitle).isLocked());
-        connect(deleteBtn, SIGNAL(released()), this, SLOT(deleteNote()));
-        mainLayout->addWidget(deleteBtn, rowCount++, 0);
-
-        setLayout(mainLayout);
-        std::string title = "QTNote: " + currentCollection;
-        setWindowTitle(tr(title.c_str()));
-
-    }
+    void collectionView() override;
+    void noteView() override;
+    void editNote(TextNote &note) override;
+    void editImportantNote(TextNote &note) override;
+    void importantNoteView() override;
 
 private slots:
 
@@ -155,6 +46,11 @@ private slots:
         editNote(getCurrentNote(currentTitle));
     }
 
+    void importantNoteSelected() {
+        currentTitle = selectionList->currentItem()->text().toStdString();
+        editImportantNote(collections->getImportantNote(currentTitle));
+    }
+
     void addCollection() {
         std::string input = inputTextDialog("Inserisci il nome della collezione", "nuova collezione");
         if (input != "" && collections->addCollections(input))
@@ -163,6 +59,7 @@ private slots:
 
     void viewNotes() {
         currentCollection = selectionList->currentItem()->text().toStdString();
+        currentCollection = currentCollection.substr(10, currentCollection.length());
         noteView();
     }
 
@@ -170,13 +67,13 @@ private slots:
         std::string input = inputTextDialog("Dimmi il titolo della nota", "Titolo molto interessante");
         if (input != "") {
             currentTitle = input;
-            collections->addNote(input, currentCollection);
+            collections->addOrCreateAndGetNote(input, currentCollection);
             noteView();
         }
     }
 
     void viewImportantNotes() {
-
+        importantNoteView();
     }
 
     void saveCurrentNote() {
@@ -185,15 +82,29 @@ private slots:
         noteView();
     }
 
-    void changeCollection() {
+    void saveImportantNote() {
+        if (!collections->getImportantNote(currentTitle).isLocked())
+            collections->getImportantNote(currentTitle).setText(textArea->toPlainText().toStdString());
+        importantNoteView();
+    }
 
+    void changeCollection() {
+        std::string input = inputTextDialog("A quale collezione lo sposto", currentCollection);
+        if (input != "") {
+            collections->addCollections(input);
+            getCurrentNote(currentTitle).setCollection(input);
+            collectionView();
+        }
     }
 
     void deleteNote() {
-
+        collections->removeNote(currentTitle, currentCollection);
+        noteView();
     }
 
     void lockStateChange(int state) {
+        if (!getCurrentNote(currentTitle).isLocked())
+            getCurrentNote(currentTitle).setText(textArea->toPlainText().toStdString());
         getCurrentNote(currentTitle).setLocked(state);
         editNote(getCurrentNote(currentTitle));
     }
@@ -213,15 +124,20 @@ private:
     std::string currentTitle = "";
 
     TextNote& getCurrentNote(const std::string &title) {
-        return collections->addNote(title, currentCollection);
+        return collections->addOrCreateAndGetNote(title, currentCollection);
     }
 
-    void clearLayout(QLayout* layout, bool deleteWidgets = true)
-    {
-        while (QLayoutItem* item = layout->takeAt(0))
-        {
-            if (deleteWidgets)
-            {
+    std::string addCollectionCount(std::string collection) {
+        std::string count = std::to_string(collections->collectionNoteCount(collection));
+        for (int i = 0;i < 6 - count.length();i++)
+            count = " " + count;
+        std::cout << ("\tdim: " + count).length() << std::endl;
+        return "dim: " + count + "\t" + collection;
+    }
+
+    void clearLayout(QLayout* layout, bool deleteWidgets = true) {
+        while (QLayoutItem* item = layout->takeAt(0)) {
+            if (deleteWidgets) {
                 if (QWidget* widget = item->widget())
                     widget->deleteLater();
             }
