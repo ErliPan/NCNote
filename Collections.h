@@ -18,30 +18,66 @@ class Collections : public CollectionInterface {
 public:
     std::map<std::string, int> collection;
     std::list<TextNote> notes;
+    int importantNoteCount = 0;
 
 
-    void update(const std::string &fromCollection, const std::string &toCollection) {
+    void update(const std::string &fromCollection, const std::string &toCollection, const bool important) {
 
+        if (fromCollection == toCollection) {
+            importantNoteCount += important;
+        } else {
+            collection[fromCollection]--;
+            collection[toCollection]++;
+        }
+    }
+
+    bool removeNote(const std::string &title, const std::string &collection) {
+        for (auto it = notes.begin(); it != notes.end(); it++) {
+            if ((it->getTitle()) == title && (it->getCollection()) == collection) {
+                notes.erase(it);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    int collectionNoteCount(const std::string &name) {
+        for (auto it : collection)
+            if (it.first == name)
+                return collection[name];
+
+        return -1;
     }
 
     bool addCollections(const std::string &name) {
         for (auto it : collection)
-            if (it.first == name) return false;
+            if (it.first == name)
+                return false;
 
         collection.insert(std::pair<std::string, int>(name, 0));
         return true;
     }
 
-    TextNote& addNote(const std::string &title, const std::string &collection) {
+    TextNote& addOrCreateAndGetNote(const std::string &title, const std::string &collectionName) {
 
         for (auto it = notes.begin(); it != notes.end(); it++) {
-            if ((it->getTitle()) == title && (it->getCollection()) == collection)
+            if ((it->getTitle()) == title && (it->getCollection()) == collectionName)
                 return *it;
         }
 
-        TextNote elm(title, collection);
+        TextNote elm(title, collectionName);
+        elm.registerObs(this);
         notes.push_back(elm);
+        collection[collectionName]++;
         return notes.back();
+    }
+
+    TextNote& getImportantNote(const std::string &collectionAndTitle) {
+        for (auto it = notes.begin(); it != notes.end(); it++) {
+            if (it->isImportant() && (it->getCollection() + " --> " + it->getTitle()) == collectionAndTitle)
+                return *it;
+        }
+        return *notes.end();
     }
 
     std::map<std::string, int>& getCollections() {
@@ -63,9 +99,6 @@ public:
     int getImportantNoteCount() const {
         return importantNoteCount;
     }
-
-private:
-    int importantNoteCount = 0;
 
 };
 
