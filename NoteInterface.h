@@ -12,8 +12,8 @@ protected:
     std::string title;
     std::string collection;
 
-    bool locked;
-    bool important;
+    bool locked = false;
+    bool important = false;
 
     NoteInterface(const std::string &title, const std::string &collection) : title(title), collection(collection) {};
 
