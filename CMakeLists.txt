@@ -13,7 +13,7 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-add_executable(QTNote main.cpp TextNote.h Collections.h ViewInterface.h NoteInterface.h CollectionInterface.h QTView.h Collections.cpp)
+add_executable(QTNote main.cpp TextNote.h Collections.h ViewInterface.h NoteInterface.h CollectionInterface.h QTView.h)
 
 target_link_libraries(QTNote Qt5::Core)
 target_link_libraries(QTNote Qt5::Widgets)

@@ -39,13 +39,19 @@ public:
         mainLayout->addWidget(createTitle("Lista collezioni"), rowCount++, 0);
         mainLayout->addWidget(createText("Seleziona una collezione di note da visualizzare"), rowCount++, 0);
 
+        if (collections->getImportantNoteCount() > 0) {
+            // BTN
+            auto backBtn = createButton("Note importanti: " + collections->getImportantNoteCount());
+            connect(backBtn, SIGNAL(released()), this, SLOT(viewImportantNotes()));
+            mainLayout->addWidget(backBtn, rowCount++, 0);
+        }
+
         // Selection list
-        selectionList = createListSelection();
         selectionList = createListSelection();
         for (auto it : collections->getCollections()) {
             new QListWidgetItem(tr(it.first.c_str()), selectionList);
         }
-        connect(selectionList, SIGNAL(itemSelectionChanged()), this, SLOT(collectionSelected()));
+        connect(selectionList, SIGNAL(itemSelectionChanged()), this, SLOT(viewNotes()));
         mainLayout->addWidget(selectionList, rowCount++, 0);
 
         // BTN
@@ -101,29 +107,39 @@ public:
         //Title
         mainLayout->addWidget(createTitle(note.getTitle()), rowCount++, 0);
 
-        mainLayout->addWidget(createCheckBox("Bloccato"), rowCount++, 0);
-        mainLayout->addWidget(createCheckBox("Importante"), rowCount++, 0);
+        //CHeckbox
+        auto lockCheck = createCheckBox("Bloccato");
+        lockCheck->setChecked(currentNote->isLocked());
+        mainLayout->addWidget(lockCheck, rowCount++, 0);
+        connect(lockCheck, SIGNAL(stateChanged(int)), this, SLOT(lockStateChange(int)));
 
-        textArea = createTextArea();
+        //CHeckbox
+        auto importantCheck = createCheckBox("Importante", currentNote->isLocked());
+        importantCheck->setChecked(currentNote->isImportant());
+        mainLayout->addWidget(importantCheck, rowCount++, 0);
+        connect(importantCheck, SIGNAL(stateChanged(int)), this, SLOT(importantStateChange(int)));
+
+        //Text Area
+        textArea = createTextArea(currentNote->getText(), currentNote->isLocked());
         mainLayout->addWidget(textArea, rowCount++, 0);
 
         // BTN
-        auto saveBtn = createButton("Salva");
-        connect(saveBtn, SIGNAL(released()), this, SLOT(onButtonReleased()));
+        auto saveBtn = createButton(currentNote->isLocked() ? "Torna indietro" : "Salva");
+        connect(saveBtn, SIGNAL(released()), this, SLOT(saveCurrentNote()));
         mainLayout->addWidget(saveBtn, rowCount++, 0);
 
         // BTN
-        auto changeCollectionBtn = createButton("Cambia collezione");
-        connect(changeCollectionBtn, SIGNAL(released()), this, SLOT(onButtonReleased()));
+        auto changeCollectionBtn = createButton("Cambia collezione", currentNote->isLocked());
+        connect(changeCollectionBtn, SIGNAL(released()), this, SLOT(changeCollection()));
         mainLayout->addWidget(changeCollectionBtn, rowCount++, 0);
 
         // BTN
-        auto deleteBtn = createButton("Elimina");
-        connect(deleteBtn, SIGNAL(released()), this, SLOT(onButtonReleased()));
+        auto deleteBtn = createButton("Elimina", currentNote->isLocked());
+        connect(deleteBtn, SIGNAL(released()), this, SLOT(deleteNote()));
         mainLayout->addWidget(deleteBtn, rowCount++, 0);
 
         setLayout(mainLayout);
-        std::string title = "QTNote: " + note.getTitle();
+        std::string title = "QTNote: " + currentCollection;
         setWindowTitle(tr(title.c_str()));
 
     }
@@ -134,15 +150,17 @@ private slots:
         collectionView();
     };
 
-    void addCollection() {
-        std::string input = inputTextDialog("Inserisci il nome della collezione", "nuova collezione");
-        if (input != "") {
-            collections->addCollections(input);
-            collectionView();
-        }
+    void noteSelected() {
+        editNote(*currentNote);
     }
 
-    void collectionSelected() {
+    void addCollection() {
+        std::string input = inputTextDialog("Inserisci il nome della collezione", "nuova collezione");
+        if (input != "" && collections->addCollections(input))
+            collectionView();
+    }
+
+    void viewNotes() {
         currentCollection = selectionList->currentItem()->text().toStdString();
         noteView();
     }
@@ -150,20 +168,36 @@ private slots:
     void createNote() {
         std::string input = inputTextDialog("Dimmi il titolo della nota", "Titolo molto interessante");
         if (input != "") {
-            currentNote = std::unique_ptr<TextNote>(&collections->addNote(input, currentCollection));
+            currentNote = collections->addNote(input, currentCollection);
             noteView();
         }
     }
 
-    void noteSelected() {
+    void viewImportantNotes() {
+
+    }
+
+    void saveCurrentNote() {
+        if (!currentNote->isLocked())
+            currentNote->setText(textArea->toPlainText().toStdString());
+        noteView();
+    }
+
+    void changeCollection() {
+
+    }
+
+    void deleteNote() {
+
+    }
+
+    void lockStateChange(int state) {
+        currentNote->setLocked(state);
         editNote(*currentNote);
     }
 
-    void onButtonReleased() {
-        textArea->clear();
-        //QString fullText = "Pulsante premuto " + btn->text();
-        QString fullText = "Pulsante premuto ";
-        textArea->append(tr(fullText.toStdString().c_str()));
+    void importantStateChange(int state) {
+        currentNote->setImportant(state);
     }
 
 private:
@@ -229,20 +263,26 @@ private:
         return listWidget;
     }
 
-    QPointer<QPushButton> createButton(const std::string &text) {
+    QPointer<QPushButton> createButton(const std::string &text, bool locked = false) {
         auto btn = QPointer<QPushButton>(new QPushButton(tr(text.c_str())));
+        btn->setEnabled(!locked);
         return btn;
     }
 
-    QPointer<QTextBrowser> createTextArea(const std::string &text = "") {
+    QPointer<QTextBrowser> createTextArea(const std::string &text, bool locked = false) {
         auto textArea = QPointer<QTextBrowser>(new QTextBrowser());
         textArea->setText(QString::fromStdString(text));
-        textArea->setTextInteractionFlags(Qt::TextEditable);
+        if (!locked)
+            textArea->setTextInteractionFlags(Qt::TextEditable);
         return textArea;
     }
 
-    QPointer<QCheckBox> createCheckBox(const std::string &text) {
+    QPointer<QCheckBox> createCheckBox(const std::string &text, bool locked = false) {
         auto check = QPointer<QCheckBox>(new QCheckBox(QString::fromStdString(text)));
+        if (locked) { //Set checkable have a bug where a checked box looks like unchecked
+            check->setAttribute(Qt::WA_TransparentForMouseEvents);
+            check->setFocusPolicy(Qt::NoFocus);
+        }
         return check;
     }
 
