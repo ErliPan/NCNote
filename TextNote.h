@@ -31,11 +31,9 @@ public:
         this->observer = obs;
     }
 
-    void removeObs(Collections *obs) override {
-        this->observer = nullptr;
-    }
+    void removeObs(Collections *obs) override;
 
-    void notify(const std::string &fromCollection) override;
+    void notify(const std::string &fromCollection, const bool remove = false) override;
 
     bool operator==(const TextNote &that) const {
         return (this->title == that.title && this->text == that.text);

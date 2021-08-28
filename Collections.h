@@ -21,10 +21,12 @@ public:
     int importantNoteCount = 0;
 
 
-    void update(const std::string &fromCollection, const std::string &toCollection, const bool important) {
+    void update(const std::string &fromCollection, const std::string &toCollection, const bool important, const bool remove) {
 
-        if (fromCollection == toCollection) {
-            importantNoteCount += important;
+        if (remove) {
+            collection[fromCollection]--;
+        } else if (fromCollection == toCollection) {
+            important ? importantNoteCount++ : importantNoteCount--;
         } else {
             collection[fromCollection]--;
             collection[toCollection]++;
@@ -34,6 +36,7 @@ public:
     bool removeNote(const std::string &title, const std::string &collection) {
         for (auto it = notes.begin(); it != notes.end(); it++) {
             if ((it->getTitle()) == title && (it->getCollection()) == collection) {
+                it->removeObs(this);
                 notes.erase(it);
                 return true;
             }

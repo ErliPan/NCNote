@@ -25,7 +25,7 @@ public:
 
     virtual void registerObs(Collections* obs) = 0;
     virtual void removeObs(Collections* obs) = 0;
-    virtual void notify(const std::string &fromCollection) = 0;
+    virtual void notify(const std::string &fromCollection, const bool remove = false) = 0;
 
     virtual const std::string &getTitle() const {
         return title;
