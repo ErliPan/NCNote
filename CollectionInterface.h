@@ -12,7 +12,7 @@
 class CollectionInterface {
 
 public:
-    virtual void update(std::string fromCollection, std::string toCollection) = 0;
+    virtual void update(const std::string &fromCollection, const std::string &toCollection) = 0;
 
 protected:
     virtual ~CollectionInterface() {}

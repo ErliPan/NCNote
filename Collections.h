@@ -16,18 +16,53 @@
 class Collections : public CollectionInterface {
 
 public:
-    std::list<TextNote> notes;
     std::map<std::string, int> collection;
+    std::list<TextNote> notes;
 
-    void update(std::string fromCollection, std::string toCollection) {
+    static const std::string SPECIAL_COLLECTION;
+
+    Collections() {
+        collection.insert(std::pair<std::string, int>(SPECIAL_COLLECTION, 0));
 
     }
 
-    void addNote(TextNote &note) {
+    void update(const std::string &fromCollection, const std::string &toCollection) {
 
+    }
+
+    void addCollections(const std::string &name) {
+        collection.insert(std::pair<std::string, int>(name, 0));
+    }
+
+    TextNote& addNote(const std::string &title, const std::string &collection) {
+        TextNote elm(title, collection);
+        notes.push_back(elm);
+        return notes.back();
+    }
+
+    std::map<std::string, int>& getCollections() {
+        return collection;
+    }
+
+    std::unique_ptr<std::list<TextNote>> getNotes(const std::string collection) {
+        auto ret = std::unique_ptr<std::list<TextNote>>(new std::list<TextNote>);
+
+        for (auto it : notes) {
+            if (it.getCollection() == collection) {
+                ret->push_back(it);
+            }
+        }
+
+        return ret;
+    }
+
+    TextNote& getNote(const int index) {
+        auto it = notes.begin();
+        if (notes.size() > index)
+            std::advance(it, index);
+        return *it;
     }
 
 };
-
 
 #endif //NCNOTE_COLLECTIONS_H
