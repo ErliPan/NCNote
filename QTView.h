@@ -109,32 +109,32 @@ public:
 
         //CHeckbox
         auto lockCheck = createCheckBox("Bloccato");
-        lockCheck->setChecked(currentNote->isLocked());
+        lockCheck->setChecked(getCurrentNote(currentTitle).isLocked());
         mainLayout->addWidget(lockCheck, rowCount++, 0);
         connect(lockCheck, SIGNAL(stateChanged(int)), this, SLOT(lockStateChange(int)));
 
         //CHeckbox
-        auto importantCheck = createCheckBox("Importante", currentNote->isLocked());
-        importantCheck->setChecked(currentNote->isImportant());
+        auto importantCheck = createCheckBox("Importante", getCurrentNote(currentTitle).isLocked());
+        importantCheck->setChecked(getCurrentNote(currentTitle).isImportant());
         mainLayout->addWidget(importantCheck, rowCount++, 0);
         connect(importantCheck, SIGNAL(stateChanged(int)), this, SLOT(importantStateChange(int)));
 
         //Text Area
-        textArea = createTextArea(currentNote->getText(), currentNote->isLocked());
+        textArea = createTextArea(getCurrentNote(currentTitle).getText(), getCurrentNote(currentTitle).isLocked());
         mainLayout->addWidget(textArea, rowCount++, 0);
 
         // BTN
-        auto saveBtn = createButton(currentNote->isLocked() ? "Torna indietro" : "Salva");
+        auto saveBtn = createButton(getCurrentNote(currentTitle).isLocked() ? "Torna indietro" : "Salva");
         connect(saveBtn, SIGNAL(released()), this, SLOT(saveCurrentNote()));
         mainLayout->addWidget(saveBtn, rowCount++, 0);
 
         // BTN
-        auto changeCollectionBtn = createButton("Cambia collezione", currentNote->isLocked());
+        auto changeCollectionBtn = createButton("Cambia collezione", getCurrentNote(currentTitle).isLocked());
         connect(changeCollectionBtn, SIGNAL(released()), this, SLOT(changeCollection()));
         mainLayout->addWidget(changeCollectionBtn, rowCount++, 0);
 
         // BTN
-        auto deleteBtn = createButton("Elimina", currentNote->isLocked());
+        auto deleteBtn = createButton("Elimina", getCurrentNote(currentTitle).isLocked());
         connect(deleteBtn, SIGNAL(released()), this, SLOT(deleteNote()));
         mainLayout->addWidget(deleteBtn, rowCount++, 0);
 
@@ -151,7 +151,8 @@ private slots:
     };
 
     void noteSelected() {
-        editNote(*currentNote);
+        currentTitle = selectionList->currentItem()->text().toStdString();
+        editNote(getCurrentNote(currentTitle));
     }
 
     void addCollection() {
@@ -168,7 +169,8 @@ private slots:
     void createNote() {
         std::string input = inputTextDialog("Dimmi il titolo della nota", "Titolo molto interessante");
         if (input != "") {
-            currentNote = collections->addNote(input, currentCollection);
+            currentTitle = input;
+            collections->addNote(input, currentCollection);
             noteView();
         }
     }
@@ -178,8 +180,8 @@ private slots:
     }
 
     void saveCurrentNote() {
-        if (!currentNote->isLocked())
-            currentNote->setText(textArea->toPlainText().toStdString());
+        if (!getCurrentNote(currentTitle).isLocked())
+            getCurrentNote(currentTitle).setText(textArea->toPlainText().toStdString());
         noteView();
     }
 
@@ -192,12 +194,12 @@ private slots:
     }
 
     void lockStateChange(int state) {
-        currentNote->setLocked(state);
-        editNote(*currentNote);
+        getCurrentNote(currentTitle).setLocked(state);
+        editNote(getCurrentNote(currentTitle));
     }
 
     void importantStateChange(int state) {
-        currentNote->setImportant(state);
+        getCurrentNote(currentTitle).setImportant(state);
     }
 
 private:
@@ -208,7 +210,11 @@ private:
     QPointer<QListWidget> selectionList;
 
     std::string currentCollection = "";
-    std::unique_ptr<TextNote> currentNote;
+    std::string currentTitle = "";
+
+    TextNote& getCurrentNote(const std::string &title) {
+        return collections->addNote(title, currentCollection);
+    }
 
     void clearLayout(QLayout* layout, bool deleteWidgets = true)
     {
