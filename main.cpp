@@ -1,17 +1,14 @@
 #include <iostream>
 
-#include <QtWidgets>
 #include "QTView.h"
 
 int main(int argc, char *argv[]) {
     std::cout << "Hello, World!" << std::endl;
     QApplication a(argc, argv);
+    Collections collection;
+    QTView w(&collection);
 
-    // This is our MainWidget class containing our GUI and functionality
-    QTView w;
-    w.show(); // Show main window
 
-    // run the application and return execs() return value/code
+
     return a.exec();
-    return 0;
 }
