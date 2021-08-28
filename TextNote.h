@@ -16,6 +16,9 @@ protected:
     Collections* observer;
 
 public:
+
+    TextNote(const std::string &title, const std::string &collection) : NoteInterface(title, collection) {}
+
     const std::string &getText() const {
         return text;
     }

@@ -10,12 +10,16 @@ class NoteInterface {
 
 protected:
     std::string title;
+    std::string collection;
 
     bool locked;
     bool important;
 
-    ~NoteInterface() {};
+    NoteInterface(const std::string &title, const std::string &collection) : title(title), collection(collection) {};
+
 public:
+
+    virtual ~NoteInterface() {}
 
     virtual void registerObs(Collections* obs) = 0;
     virtual void removeObs(Collections* obs) = 0;
@@ -23,6 +27,14 @@ public:
 
     virtual const std::string &getTitle() const {
         return title;
+    }
+
+    const std::string &getCollection() const {
+        return collection;
+    }
+
+    void setCollection(const std::string &collection) {
+        NoteInterface::collection = collection;
     }
 
     virtual void setTitle(const std::string &title) {
