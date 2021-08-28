@@ -12,6 +12,8 @@ protected:
     std::string title;
     std::string collection;
 
+    Collections* observer;
+
     bool locked = false;
     bool important = false;
 
@@ -23,23 +25,25 @@ public:
 
     virtual void registerObs(Collections* obs) = 0;
     virtual void removeObs(Collections* obs) = 0;
-    virtual void notify() = 0;
+    virtual void notify(const std::string &fromCollection) = 0;
 
     virtual const std::string &getTitle() const {
         return title;
     }
 
-    const std::string &getCollection() const {
+    virtual const std::string &getCollection() const {
         return collection;
     }
 
-    void setCollection(const std::string &collection) {
+    virtual void setCollection(const std::string &collection) {
+        std::string pastCollection = NoteInterface::collection;
         NoteInterface::collection = collection;
+        notify(pastCollection);
     }
 
     virtual void setTitle(const std::string &title) {
         if (!locked)
-        NoteInterface::title = title;
+            NoteInterface::title = title;
     }
 
     virtual bool isLocked() const {
@@ -55,8 +59,10 @@ public:
     }
 
     virtual void setImportant(bool important) {
-        if (!locked)
-        NoteInterface::important = important;
+        if (!locked) {
+            NoteInterface::important = important;
+            notify(this->collection);
+        }
     }
 
 };
