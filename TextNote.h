@@ -6,14 +6,13 @@
 #define NCNOTE_TEXTNOTE_H
 
 
+#include <string>
 #include "NoteInterface.h"
-
 
 class TextNote : public NoteInterface {
 
 protected:
     std::string text;
-    Collections* observer;
 
 public:
 
@@ -29,15 +28,17 @@ public:
     }
 
     void registerObs(Collections *obs) override {
-
+        this->observer = obs;
     }
 
     void removeObs(Collections *obs) override {
-
+        this->observer = nullptr;
     }
 
-    void notify() override {
+    void notify(const std::string &fromCollection) override;
 
+    bool operator==(const TextNote &that) const {
+        return (this->title == that.title && this->text == that.text);
     }
 };
 
