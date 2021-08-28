@@ -32,15 +32,16 @@ public:
         return true;
     }
 
-    std::unique_ptr<TextNote> addNote(const std::string &title, const std::string &collection) {
+    TextNote& addNote(const std::string &title, const std::string &collection) {
 
-        for (auto it : notes) {
-            if (it.getTitle() == title) return std::unique_ptr<TextNote>(&it);
+        for (auto it = notes.begin(); it != notes.end(); it++) {
+            if ((it->getTitle()) == title && (it->getCollection()) == collection)
+                return *it;
         }
 
         TextNote elm(title, collection);
         notes.push_back(elm);
-        return std::unique_ptr<TextNote>(&notes.back());
+        return notes.back();
     }
 
     std::map<std::string, int>& getCollections() {
