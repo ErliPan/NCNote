@@ -12,8 +12,8 @@ class ViewInterface {
 public:
     virtual ~ViewInterface() {};
 
-    virtual void collectionView(const std::string elm[], const int size) = 0;
-    virtual void noteView(const std::string elm[], const int size, const std::string collectionName) = 0;
+    virtual void collectionView() = 0;
+    virtual void noteView() = 0;
     virtual void editNote(TextNote &note) = 0;
 
 };
