@@ -15,6 +15,8 @@ public:
     virtual void collectionView() = 0;
     virtual void noteView() = 0;
     virtual void editNote(TextNote &note) = 0;
+    virtual void editImportantNote(TextNote &note) = 0;
+    virtual void importantNoteView() = 0;
 
 };
 
