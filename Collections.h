@@ -61,6 +61,14 @@ public:
         return true;
     }
 
+    int countLocked() {
+        auto i = 0;
+        for (auto it : notes)
+            if (it.isLocked()) i++;
+
+        return i;
+    }
+
     TextNote& addOrCreateAndGetNote(const std::string &title, const std::string &collectionName) {
 
         for (auto it = notes.begin(); it != notes.end(); it++) {
