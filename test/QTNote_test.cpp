@@ -26,6 +26,18 @@ TEST(TextNote, CheckTitle) {
 
 }
 
+TEST(TextNote, LockTest) {
+
+    TextNote t("a", "a");
+
+    t.setText("123");
+    t.setLocked(true);
+    t.setText("321");
+
+    ASSERT_EQ(t.getText(), "123");
+
+}
+
 TEST(CollectionTest, defaultValueCheck) {
 
     Collections c;
@@ -65,13 +77,52 @@ TEST(CollectionTest, createAndAddNote) {
 
 }
 
-TEST(ObserverPattern, collectionNoteCountCheck) {
+TEST(CollectionTest, moveCollection) {
 
     Collections c;
-    ASSERT_EQ(c.collectionNoteCount("new collection"), -1);
 
-    c.addCollections("new collection");
-    ASSERT_EQ(c.collectionNoteCount("new collection"), 0);
+    c.addCollections("Col1");
+    c.addCollections("Col2");
+
+    TextNote& note = c.addOrCreateAndGetNote("Nuova Nota", "Col1");
+    ASSERT_EQ(c.collectionNoteCount("Col1"), 1);
+
+    note.setCollection("Col2");
+
+    ASSERT_EQ(c.collectionNoteCount("Col1"), 0);
+    ASSERT_EQ(c.collectionNoteCount("Col2"), 1);
+
+}
+
+TEST(CollectionTest, lockedCountCheck) {
+    Collections c;
+
+    c.addCollections("c137");
+    TextNote& note = c.addOrCreateAndGetNote("Rick", "c137");
+    ASSERT_EQ(c.countLocked(), 0);
+    note.setLocked(true);
+    ASSERT_EQ(c.countLocked(), 1);
+}
+
+TEST(CollectionTest, removeNote) {
+    Collections c;
+
+    c.addCollections("Col1");
+    ASSERT_EQ(c.collectionNoteCount("Col1"), 0);
+    TextNote& note = c.addOrCreateAndGetNote("Nuova Nota", "Col1");
+    ASSERT_EQ(c.collectionNoteCount("Col1"), 1);
+    c.removeNote("Nuova Nota", "Col1");
+    ASSERT_EQ(c.collectionNoteCount("Col1"), 0);
+
+}
+
+TEST(ObserverPattern, collectionNoteCountCheck) {
+
+    Collections c; //Create collections class
+    ASSERT_EQ(c.collectionNoteCount("new collection"), -1); //Error: "New collection" doesn't exists so -1
+
+    c.addCollections("new collection"); //Create new collection
+    ASSERT_EQ(c.collectionNoteCount("new collection"), 0); //New collection exists and it's count is 0
 
     c.addOrCreateAndGetNote("Nuova Nota", "new collection");
     ASSERT_EQ(c.collectionNoteCount("new collection"), 1);
@@ -89,4 +140,3 @@ TEST(ObserverPattern, importantNoteObserverCheck) {
     ASSERT_EQ(c.getImportantNoteCount(), 1);
 
 }
-
