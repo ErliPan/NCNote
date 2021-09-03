@@ -102,6 +102,26 @@ TEST(CollectionTest, lockedCountCheck) {
     ASSERT_EQ(c.countLocked(), 0);
     note.setLocked(true);
     ASSERT_EQ(c.countLocked(), 1);
+    TextNote& note2 = c.addOrCreateAndGetNote("Rick and", "c137");
+    TextNote& note3 = c.addOrCreateAndGetNote("Rick and Morty", "c137");
+    note2.setLocked(true);
+    note3.setLocked(true);
+    ASSERT_EQ(c.countLocked(), 3);
+    note3.setLocked(false);
+    ASSERT_EQ(c.countLocked(), 2);
+}
+
+TEST(CollectionTest, multiCollectionCheck) {
+    Collections c;
+
+    c.addCollections("c137");
+    c.addCollections("c137_B");
+
+    TextNote& note = c.addOrCreateAndGetNote("Rick", "c137");
+    TextNote& note2 = c.addOrCreateAndGetNote("Rick2", "c137");
+
+    ASSERT_EQ(c.collectionNoteCount("c137"), 2);
+    ASSERT_EQ(c.collectionNoteCount("c137_B"), 0);
 }
 
 TEST(CollectionTest, removeNote) {
